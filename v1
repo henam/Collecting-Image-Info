@@ -1,0 +1,145 @@
+#-------------------------------------------------------------------------------
+# Name:        Collecting image metadata
+# Purpose:
+#
+# Author:      Hena
+#
+# Created:     09/07/2014
+# Copyright:   (c) Hena 2014
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
+
+#import GUI library
+from tkinter import *
+
+#for Python V3 you must explicitely load the messagebox
+import tkinter.messagebox
+
+#create the book class incorporating instance variables and methods
+class Image:
+    def __init__(self, ID, filename, title, owner, licenceType):
+        self.ID = ID
+        self.filename = filename
+        self.title = title
+        self.owner= owner
+        self.licenceType= licenceType
+
+    def get_ID(self):
+        return self.ID
+
+    def get_filename(self):
+        return self.filename
+
+    def get_title(self):
+        return self.title
+
+    def get_owner(self):
+        return self.owner
+
+    def get_licenceType(self):
+        return self.licenceType
+
+#create the GUI interface
+class GUI:
+
+    def __init__(self):
+
+        # similar to root in other texts
+        window = Tk()
+        window.title("Data Entry Screen")
+        #setting root window and size
+        window.minsize(width=400, height=200)
+
+        #INITIALIZATION VARIABLES
+        #this variable stores whether the data has been validated or not
+        self.ready_to_write = False
+        #this will contain the list of all books entered via the gui
+        self.recordlist = []
+
+        #creating label and field variable in GUI for each entry field
+        ID_label = Label(window, text='Enter Image ID:')
+        ID_label.pack() #.pack() places the component in the window
+        self.ID_field = Entry(window)
+        self.ID_field.pack()
+
+        filename_label = Label(window, text='Enter File Name:')
+        filename_label.pack()
+        self.filename_field = Entry(window)
+        self.filename_field.pack()
+
+        title_label = Label(window, text='Enter Image Title:')
+        title_label.pack()
+        self.title_field = Entry(window)
+        self.title_field.pack()
+
+        owner_label = Label(window, text='Enter Owner:')
+        owner_label.pack()
+        self.owner_field = Entry(window)
+        self.owner_field.pack()
+
+        licenceType_label = Label(window, text='Enter Licence Type:')
+        licenceType_label.pack()
+        self.licenceType_field = Entry(window)
+        self.licenceType_field.pack()
+
+        #creates a button. The command function is run when the button is pressed
+        #the 'command=self.doSubmit' is an example of a callback method
+        button_label = Label(window, text='Press to validate:')
+        button = Button(window, text='Submit', command=self.doSubmit)
+
+        button_label1 = Label(window, text='Convert Record to csv')
+        button1 = Button(window, text='write to csv', command=self.writetocsv)
+        button_label.pack()
+        button.pack()
+        button_label1.pack()
+        button1.pack()
+
+        #waiting for user input - event driven program
+        window.mainloop()
+
+
+    def doSubmit(self):
+        #this is the callback method for the 'Submit' button
+        if len(self.ID_field.get()) <1 or len(self.filename_field.get()) <1 or len(self.title_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.licenceType_field.get()) <1:
+            tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
+        else:
+            try:
+                validated_ID = int(self.ID_field.get())
+                self.recordlist.append(Image(self.ID_field.get(),self.filename_field.get(), self.title_field.get(), self.owner_field.get(), self.licenceType_field.get()))
+                self.ready_to_write= True
+                tkinter.messagebox.showinfo('Notice','Submission Sucessful')
+
+            except:
+                tkinter.messagebox.showwarning('Warning!','Please enter numeric ID code')
+                print('Please enter numeric ID code')
+
+
+    def writetocsv(self):
+        #this is the callback method for the 'write to csv' button
+        import csv
+        file_name = 'imageInfo.txt'
+
+        if self.ready_to_write: #cheacks data has been previously validated
+            ofile = open(file_name, 'a') #open with write('w') or append('a') privelages
+            writer = csv.writer(ofile, delimiter=',')
+            #cycles through list of records created by gui
+            for record in self.recordlist:
+                print(record.get_ID())
+                writer.writerow([record.get_ID(),record.get_filename(),record.get_title(),record.get_owner(),record.get_licenceType()])
+            #explicitly closes the output file
+            ofile.close()
+
+            self.filename_field.delete(0, END) #command to clear field
+            self.owner_field.delete(0, END)
+            self.title_field.delete(0, END)
+            self.licenceType_field.delete(0, END)
+            self.ID_field.delete(0, END)
+        else:
+            tkinter.messagebox.showwarning('Error!', 'You need to Validate your data')
+
+        self.ready_to_write= False
+        tkinter.messagebox.showinfo('Notice',file_name+' File Generated Sucessfully')
+
+#initialises the programme
+GUI()
