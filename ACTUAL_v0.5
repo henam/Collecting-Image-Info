@@ -1,0 +1,61 @@
+#-------------------------------------------------------------------------------
+# Name:        Collecting image metadata
+# Purpose:
+#
+# Author:      Hena
+#
+# Created:     09/07/2014
+# Copyright:   (c) Hena 2014
+# Licence:     <Creative Commons>
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
+
+
+class Image:
+      #initialising the variables
+    def __init__(self, ID, filename, title, owner, licenceType):
+        self.ID = ID
+        self.filename = filename
+        self.title = title
+        self.owner= owner
+        self.licenceType= licenceType
+
+
+    def show_details(self):
+        """
+        >>> i = Images("3", "flowers.jpg", "Flowers", "Hena", "Attribution alone")
+        >>> i.show_details()
+        ID: 3, File Name: flowers, Title: Flowers, Owner: Hena, Licence: Attribution alone
+        """
+        print("ID: {0}, File Name: {1}, Title: {2}, Owner: {3}, Licence: {4}".format(self.ID, self.filename, self.title, self.owner, self.licenceType))
+
+#collects data
+def get_data():
+    global ID
+    global filename
+    global title
+    global owner
+    global licenceType
+    ID = int(input("Enter ID: "))
+    filename = input("Enter File Name: ")
+    title = input("Enter Image Title: ")
+    owner = input("Enter Owner: ")
+    licenceType = input("Enter Licence Type: ")
+
+#main routine
+if __name__== "__main__":
+    import doctest
+    doctest.testmod(verbose = False)
+    image_data = []
+    for i in range(x):
+        get_data()
+        image_data.append(Image(ID, filename, title, owner, licenceType))
+    for Images in image_data:
+        Images.show_details()
+
